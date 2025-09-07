@@ -60,8 +60,8 @@ nav ul {
 #details {
   position: absolute;
   left: 60px;
-  background: rgba(0,0,0,0.3);
-  color: blue;
+  background: rgba(0,0,0,0.7);
+  color: rgb(216, 216, 228);
   text-align: center;
   padding: 15px;
 }

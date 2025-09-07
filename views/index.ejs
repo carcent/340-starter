@@ -1,7 +1,12 @@
 <h1>Welcome to CSE Motors!</h1>
 <div class="container">
 <section id="img-main">
-    <img src="images/vehicles/delorean.jpg" alt="car">
+    <picture>
+        <source srcset="images/vehicles/delorean-tn.jpg" media="(max-width: 400px)">
+        <source srcset="images/vehicles/delorean.jpg" media="(max-width: 960px)">
+        <img src="images/vehicles/delorean.jpg" alt="car" loading="lazy" width="800" height="533">
+    </picture>
+
 </section>
 <section id="details">
     <h2>DMC Delorean</h2>
