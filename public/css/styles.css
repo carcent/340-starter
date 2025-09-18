@@ -102,3 +102,11 @@ nav ul {
   grid-column: 1;
 }
 }
+
+#inv-display{
+  background-color: gray;
+  display: grid;
+}
+#inv-display li{
+  text-decoration: none;
+  }
