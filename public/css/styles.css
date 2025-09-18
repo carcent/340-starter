@@ -79,6 +79,13 @@ nav ul {
   gap:20px;
   padding: 20px;
 }
+#inv-display{
+  background-color: gray;
+  display: grid;
+}
+#inv-display li{
+  text-decoration: none;
+  }
 
 @media(max-width:600px) {
   .container{
@@ -103,10 +110,4 @@ nav ul {
 }
 }
 
-#inv-display{
-  background-color: gray;
-  display: grid;
-}
-#inv-display li{
-  text-decoration: none;
-  }
+
