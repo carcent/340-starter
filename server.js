@@ -11,14 +11,13 @@ const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
+const invController = require("./controllers/invController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
-/* favicon ********************
-*/
-app.use('/favicon.ico', express.static(path.join(__dirname, 'public/images/site/favicon.-32x32.png')));
-/* **************************
- * View Engine and Templates
- *************************/
+
+/****************************
+ ** * View Engine and Templates
+ ************************ */
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout") //not at views root

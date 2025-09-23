@@ -21,21 +21,22 @@ invCont.buildByClassificationId = async function (req, res, next) {
 
 /* Build vehicle detail view */
 invCont.buildByInvId = async function (req, res, next) {
-    const invId = req.params.invId;
-    const data = await invModel.getVehicleByInvId(invId);
+    const invId = parseInt(req.params.invId)
+    const data = await invModel.getVehicleByInvId(invId)
 
-    if (!data) {
-        return next(new Error("Vehicle not found"));
+    if (!data || data.length === 0) {
+        return next(new Error("Vehicle not found"))
     }
 
-    const grid = await utilities.buildVehicleDetailView(data);
-    const nav = await utilities.getNav();
+    const vehicle = data[0] 
+    const grid = await utilities.buildVehicleDetailView(vehicle)
+    const nav = await utilities.getNav()
 
     res.render("inventory/detail", {
-        title: `${data.inv_make} ${data.inv_model}`,
+        title: `${vehicle.inv_make} ${vehicle.inv_model}`,
         nav,
         grid,
-    });
-};
+    })
+}
 
 module.exports = invCont;
