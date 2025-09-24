@@ -10,4 +10,8 @@ router.get("/type/:classificationId", invController.buildByClassificationId);
 // Route to build vehicle detail view
 router.get("/detail/:invId", invController.buildByInvId);
 
+// intentional error route
+
+router.get("/trigger-error", invController.triggerError)
+
 module.exports = router;
