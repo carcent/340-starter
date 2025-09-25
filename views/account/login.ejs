@@ -1,0 +1,21 @@
+<title><%= title %></title>
+<body>
+<h1><%= title %></h1>
+<% if (messages && messages.length > 0) { %>
+    <ul>
+    <% messages.forEach(function(msg){ %>
+        <li><%= msg %></li>
+    <% }); %>
+    </ul>
+<% } %>
+
+<form action="/account/login" method="POST">
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+
+    <button type="submit">Login</button>
+</form>
+</body>
