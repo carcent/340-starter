@@ -43,6 +43,34 @@ async function getVehicleByInvId(invId) {
   }
 }
 
+async function addClassification(classification_name) {
+  try {
+    const sql = "INSERT INTO classification (classification_name) VALUES ($1)"
+    const values = [classification_name]
+    return await pool.query(sql, values)
+} catch (error) {
+    console.error("addClassification error " + error);
+  }
+}
+
+async function addInventory(data) {
+  try {
+    const sql = `INSERT INTO inventory 
+    (inv_make, inv_model, inv_year, inv_price, classification_id)
+    VALUES ($1, $2, $3, $4, $5)`
+  const values = [
+    data.inv_make,
+    data.inv_model,
+    data.inv_year,
+    data.inv_price,
+    data.classification_id,
+  ]
+  return await pool.query(sql, values)
+} catch (error) {
+    console.error("addClassification error " + error);
+  }
+}
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId, 

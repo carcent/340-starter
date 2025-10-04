@@ -77,5 +77,34 @@ invCont.buildManagement = async function (req, res, next) {
     }
 }
 
+/* **********
+* Add new classification
+*********** */
+invCont.addClassification = async function (req, res, next) {
+    try {
+        const { classification_name } = req.body
+
+    if (!classification_name || !/^[A-Za-z0-9]+$/.test(classification_name)) {
+        req.flash("notice", "Invalid classification name")
+        return res.render("inventory/add-classification", { 
+        message: req.flash("notice") 
+        })
+    }
+
+    const result = await invModel.addClassification(classification_name)
+
+    if (result.rowCount === 1) {
+        req.flash("notice", "Classification added successfully")
+        } else {
+        req.flash("notice", "Error adding classification")
+        }
+
+    res.redirect("/inv")
+
+    } catch (error) {
+    next(error)
+    }
+}
+
 
 module.exports = invCont
