@@ -1,0 +1,14 @@
+<main>
+    <h1><%= title %></h1>
+    <p>Welcome to the Inventary Panel</p>
+
+    <% if (message && message.length > 0) { %>
+    <div class="notice"><%= message %></div>
+    <% } %>
+
+    <ul>
+        <li><a href="/inv/add-classification">Add New Classification</a></li>
+        <li><a href="/inv/add-inventory">Add New Vehicle</a></li>
+    </ul>
+</main>
+

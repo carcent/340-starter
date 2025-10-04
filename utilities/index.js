@@ -78,5 +78,4 @@ Util.buildVehicleDetailView = async function(vehicle) {
     return detail;
 };
 
-
 module.exports = Util

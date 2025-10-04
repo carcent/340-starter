@@ -61,4 +61,21 @@ invCont.triggerError = async function (req, res, next) {
     }
 }
 
+/* ****************
+* Build Management view*
+******************* */
+invCont.buildManagement = async function (req, res, next) {
+    try {
+        let nav = await utilities.getNav()
+        res.render("inventory/management", {
+        title: "Inventory Management",
+        nav,
+        message: req.flash("notice")
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = invCont

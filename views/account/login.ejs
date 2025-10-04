@@ -1,21 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head') %>
+
 <title><%= title %></title>
-<body>
-<h1><%= title %></h1>
-<% if (messages && messages.length > 0) { %>
-    <ul>
-    <% messages.forEach(function(msg){ %>
-        <li><%= msg %></li>
-    <% }); %>
+<% if (errors) { %>
+    <ul class="notice">
+    <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+<%  }) %>
     </ul>
 <% } %>
+<body>
+<div class="form-container">
+<h1><%= title %></h1>
 
-<form action="/account/login" method="POST">
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" required>
+<form id="loginForm" id action="/account/login" method="post">
+    <label for="account_email">Email:</label>
+    <input type="email" name="account_email" id="account_email" required>
 
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required>
+    <label for="account_password">Password:</label>
+    <input type="password" name="account_password" id="account_password" required
+    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
 
     <button type="submit">Login</button>
 </form>
+    <p class="register-link">
+        No Account? 
+        <a title="Register" href="/account/register">Sign-up</a>
+    </p>
+</div>
 </body>

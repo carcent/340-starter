@@ -14,6 +14,10 @@ router.get("/detail/:invId", invController.buildByInvId);
 
 router.get("/trigger-error", invController.triggerError)
 
+// Inventory management view
+router.get("/", invController.buildManagement)
+
+
 
 
 module.exports = router;
