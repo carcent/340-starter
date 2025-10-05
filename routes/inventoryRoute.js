@@ -14,11 +14,17 @@ router.get("/detail/:invId", invController.buildByInvId);
 
 router.get("/trigger-error", invController.triggerError)
 
+// Route to build Add Classification view
+router.get("/inv/add-classification", invController.buildAddClassification)
+
+// Route to build Add Inventory view
+router.get("/inv/add-inventory", invController.buildAddInventory)
+
 // Inventory management view
 router.get("/", invController.buildManagement)
 
 // Add Classification
-router.post("/add-classification", invController.addClassification)
+router.post("/inv/add-classification", invController.addClassification)
 
 
 module.exports = router;

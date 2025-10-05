@@ -18,6 +18,7 @@ const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
 const accountRouter = require('./routes/accountRoute');
+const cookieParser = require("cookie-parser")
 
 
 /* ***************
@@ -36,6 +37,12 @@ app.use(session({
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(cookieParser())
+
+// login Process activity
+app.use(utilities.checkJWTToken)
 
 
 app.use('/account', accountRouter);

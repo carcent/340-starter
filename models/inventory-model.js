@@ -45,11 +45,12 @@ async function getVehicleByInvId(invId) {
 
 async function addClassification(classification_name) {
   try {
-    const sql = "INSERT INTO classification (classification_name) VALUES ($1)"
+    const sql = "INSERT INTO classification (classification_name) VALUES ($1) RETURNING"
     const values = [classification_name]
     return await pool.query(sql, values)
 } catch (error) {
     console.error("addClassification error " + error);
+    throw error
   }
 }
 

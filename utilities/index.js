@@ -1,4 +1,6 @@
 const invModel = require("../models/inventory-model")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 const Util = {}
 
 /* ************************
@@ -62,7 +64,7 @@ Util.buildClassificationGrid = async function(data){
 * New function for single vehicle detail view
 ************************************ */
 
-Util.buildVehicleDetailView = async function(vehicle) {
+Util.buildVehicleDetailView = async function(vehicle){
     let detail = `
         <section class="vehicle-detail">
             <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}" class="vehicle-image" />
@@ -76,6 +78,28 @@ Util.buildVehicleDetailView = async function(vehicle) {
         </section>
     `;
     return detail;
-};
+}
+
+/* **********************************
+* milware
+*********************** */ 
+Util.checkJWTToken = (req, res, next) => {
+    if (req.cookies.jwt) {
+        jwt.verify(req.cookies.jwt, 
+            process.env.ACCESS_TOKEN_SECRET, 
+            function (err, accountData) {
+                if (err){
+                    req.flash("notice", "Please Log in")
+                    res.clearCookie("jwt")
+                    return res.redirect("/account/login")
+                }
+            res.locals.accountData = accountData
+            res.locals.loggedin = 1
+            next()
+            })
+    } else {
+        next()
+    }
+}
 
 module.exports = Util

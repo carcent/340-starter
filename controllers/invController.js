@@ -76,6 +76,40 @@ invCont.buildManagement = async function (req, res, next) {
         next(error)
     }
 }
+/* **********************
+* Build Add Classification view
+* ********************** */
+invCont.buildAddClassification = async function (req, res, next) {
+    try {
+        let nav = await utilities.getNav()
+        res.render("inventory/add-classification", {
+        title: "Add New Classification",
+        nav,
+        message: req.flash("notice")
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+/* **********************
+* Build Add Inventory view
+* ********************** */
+invCont.buildAddInventory = async function (req, res, next) {
+    try {
+        let nav = await utilities.getNav()
+        const classifications = await invModel.getClassifications()
+        res.render("inventory/add-inventory", {
+        title: "Add New Vehicle",
+        nav,
+        classifications,
+        errors: null,
+        message: req.flash("notice")
+        })
+    } catch (error) {
+    next(error)
+    }
+}
 
 /* **********
 * Add new classification

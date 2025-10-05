@@ -17,19 +17,21 @@ function asyncHandler(callback) {
 // Route to build login view
 router.get("/login", asyncHandler(accountController.buildLogin))
 
+
 // Route to build registration view
 router.get("/register", asyncHandler(accountController.buildRegister))
 
-router.post("/register", regValidate.registrationRules(),
-regValidate.checkRegData, 
-asyncHandler(accountController.registerAccount)
+router.post("/register", 
+  regValidate.registrationRules(),
+  regValidate.checkRegData, 
+  asyncHandler(accountController.registerAccount)
 )
 
 // Process the login attempt
 router.post(
   "/login",
-  (req, res) => {
-    res.status(200).send('login process')
-  }
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  asyncHandler(accountController.accountLogin)
 )
 module.exports = router
