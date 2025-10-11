@@ -16,9 +16,11 @@ const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
 const session = require("express-session")
 const pool = require('./database/')
+const flash = require("connect-flash")
 const bodyParser = require("body-parser")
 const accountRouter = require('./routes/accountRoute');
 const cookieParser = require("cookie-parser")
+const jwt = require("jsonwebtoken")
 
 
 /* ***************
@@ -34,26 +36,36 @@ app.use(session({
   saveUninitialized: true,
   name: 'sessionId',
 }))
+app.use(flash())
+
+app.use((req, res, next) => {
+  res.locals.messages = req.flash()
+  next()
+})
+//body and cookie parsing
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}))
 
 app.use(cookieParser())
 
 // login Process activity
 app.use(utilities.checkJWTToken)
 
-
-app.use('/account', accountRouter);
-
-/* ******** Express Messages Middleware */
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
+// Middleware to attach account info to all views
+app.use((req, res, next) => {
+  if (req.cookies && req.cookies.jwt) {
+    try {
+      const decoded = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET)
+      res.locals.account = decoded  
+    } catch (err) {
+      res.locals.account = null
+    }
+  } else {
+    res.locals.account = null
+  }
   next()
 })
-
 
 /****************************
  ** * View Engine and Templates
@@ -62,19 +74,20 @@ app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout") //not at views root
 
-
 /* ***********************
  * Routes
  *************************/
-app.use(static)
-
-
-// Index Route
-app.get("/", baseController.buildHome)
 
 
 // Inventory routes
+
+
+app.use(static)
 app.use("/inv", inventoryRoute)
+app.use('/account', accountRouter)
+// Index Route
+app.get("/", baseController.buildHome)
+
 
 // File Not Found Route -
 app.use(async (req, res, next) => {
@@ -95,7 +108,6 @@ app.use(async (err, req, res, next) => {
     nav
   })
 })
-
 
 
 /* ***********************

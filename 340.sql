@@ -248,3 +248,8 @@ WHERE inv_model = 'Hummer';
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
 	inv_thumbnail = REPLACE(inv_thumbnail, '/images/','/images/vehicles/');
+
+
+UPDATE account
+SET account_type = 'Admin'
+WHERE account_email = 'happy@340.edu'

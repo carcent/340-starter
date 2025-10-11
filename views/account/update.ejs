@@ -1,0 +1,88 @@
+<main>
+    <h1><%= title %></h1>
+
+    <!-- Flash messages -->
+    <% if (message && message.length > 0) { %>
+        <div class="notice"><%= message %></div>
+    <% } %>
+
+    <!-- Server-side validation errors -->
+    <% if (errors && errors.length > 0) { %>
+        <ul class="errors">
+            <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+    <!-- ===================== -->
+    <!-- Account Update Form -->
+    <!-- ===================== -->
+    <section class="form-section">
+        <h2>Update Account</h2>
+        <form action="/account/update/<%= account.account_id %>" method="post">
+            <!-- Hidden account_id -->
+            <input type="hidden" name="account_id" value="<%= account.account_id %>">
+
+            <!-- First Name -->
+            <label for="account_firstname">First Name:</label>
+            <input 
+                type="text" 
+                id="account_firstname" 
+                name="account_firstname" 
+                required
+                value="<%= (account_firstname) ? account_firstname : account.account_firstname %>"
+            >
+
+            <!-- Last Name -->
+            <label for="account_lastname">Last Name:</label>
+            <input 
+                type="text" 
+                id="account_lastname" 
+                name="account_lastname" 
+                required
+                value="<%= (account_lastname) ? account_lastname : account.account_lastname %>"
+            >
+
+            <!-- Email -->
+            <label for="account_email">Email:</label>
+            <input 
+                type="email" 
+                id="account_email" 
+                name="account_email" 
+                required
+                value="<%= (account_email) ? account_email : account.account_email %>"
+            >
+
+            <button type="submit">Update Account</button>
+        </form>
+    </section>
+
+    <!-- ===================== -->
+    <!-- Change Password Form -->
+    <!-- ===================== -->
+    <section class="form-section">
+        <h2>Change Password</h2>
+        <p>Enter a new password to change your current password. Must be at least 12 characters, include uppercase, lowercase, number, and special character.</p>
+
+        <form action="/account/update-password/<%= account.account_id %>" method="post">
+            <!-- Hidden account_id -->
+            <input type="hidden" name="account_id" value="<%= account.account_id %>">
+
+            <!-- New Password -->
+            <label for="account_password">New Password:</label>
+            <input 
+                type="password" 
+                id="account_password" 
+                name="account_password" 
+                required
+                pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+            >
+
+            <button type="submit">Change Password</button>
+            <input type="hidden" name="inv_id"
+            <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+            <% } %>>
+        </form>
+    </section>
+</main>

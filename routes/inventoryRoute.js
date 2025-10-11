@@ -1,31 +1,39 @@
-// Needed Resources 
 const express = require("express")
-const router = new express.Router() 
+const router = express.Router()
 const invController = require("../controllers/invController")
+const utilities = require("../utilities")
 
-// Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId);
+function asyncHandler(callback) {
+  return async (req, res, next) => {
+    try {
+      await callback(req, res, next)
+    } catch (error) {
+      next(error)
+    }
+  }
+}
+router.get("/", asyncHandler(invController.buildManagement))
+// Then wrap your controller functions like this:
+router.get("/type/:classificationId", asyncHandler(invController.buildByClassificationId))
+router.get("/detail/:invId", asyncHandler(invController.buildByInvId))
+router.get("/trigger-error", asyncHandler(invController.triggerError))
+
+// Administrative routes (Employee or Admin only)
+router.get("/add-classification", invController.buildAddClassification)
+router.post("/add-classification",  invController.addClassification)
+router.get("/add-inventory", invController.buildAddInventory)
+
+//router.get("/", utilities.checkAdminOrEmployee, invController.buildManagement)
 
 
-// Route to build vehicle detail view
-router.get("/detail/:invId", invController.buildByInvId);
+// get inventory for AJAX ROUTE Select Inv Item activity
+router.get(
+    "/getInventory/:classification_id", 
+    utilities.checkAdminOrEmployee, asyncHandler(invController.getInventoryJSON)
+)
+//Delete
+router.get(
+  "/delete"
+)
 
-// intentional error route
-
-router.get("/trigger-error", invController.triggerError)
-
-// Route to build Add Classification view
-router.get("/inv/add-classification", invController.buildAddClassification)
-
-// Route to build Add Inventory view
-router.get("/inv/add-inventory", invController.buildAddInventory)
-
-// Inventory management view
-router.get("/", invController.buildManagement)
-
-// Add Classification
-router.post("/inv/add-classification", invController.addClassification)
-
-
-module.exports = router;
-
+module.exports = router

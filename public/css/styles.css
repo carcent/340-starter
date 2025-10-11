@@ -359,6 +359,12 @@ footer a:hover {
 /* SMALL SCREEN*/
 
 @media(max-width:600px) {
+
+  nav ul {
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
   .container{
   display: grid;
   grid-template-columns: 1fr;

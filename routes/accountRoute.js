@@ -2,36 +2,83 @@ const express = require("express")
 const router = express.Router()
 const accountController = require("../controllers/accountController")
 const regValidate = require("../utilities/account-validation")
+const utilities = require("../utilities/")
 
-// Middleware to handle async/await errors
+// Async error handler middleware
 function asyncHandler(callback) {
-    return async (req, res, next) => {
+  return async (req, res, next) => {
     try {
-        await callback(req, res, next)
+      await callback(req, res, next)
     } catch (error) {
-        next(error)
-        }
+      next(error)
     }
+  }
 }
 
-// Route to build login view
+// ===============================
+//         GET ROUTES
+// ===============================
+
+// Show login form
 router.get("/login", asyncHandler(accountController.buildLogin))
 
-
-// Route to build registration view
+// Show registration form
 router.get("/register", asyncHandler(accountController.buildRegister))
 
-router.post("/register", 
+router.get("/", (req, res) => {
+  res.redirect("/account/login")
+})
+
+// Show account management page (only if logged in)
+router.get(
+  "/management",
+  utilities.checkLogin,
+  asyncHandler(accountController.buildAccountManagement)
+)
+
+// Show update account form (only if logged in)
+router.get(
+  "/update/:id",
+  utilities.checkLogin,
+  asyncHandler(accountController.buildUpdateAccount)
+)
+
+// ===============================
+//         POST ROUTES
+// ===============================
+
+// Handle registration form submission
+router.post(
+  "/register",
   regValidate.registrationRules(),
-  regValidate.checkRegData, 
+  regValidate.checkRegData,
   asyncHandler(accountController.registerAccount)
 )
 
-// Process the login attempt
+// Handle login form submission
 router.post(
   "/login",
   regValidate.loginRules(),
   regValidate.checkLoginData,
   asyncHandler(accountController.accountLogin)
 )
+
+
+router.post(
+  "/update/:id",
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateData,      
+  asyncHandler(accountController.updateAccount) 
+);
+
+router.post(
+  "/update-password/:id",
+  regValidate.updatePasswordRules(),
+  regValidate.checkPasswordData,
+  asyncHandler(accountController.updatePassword)
+);
+
+// ===============================
+//         EXPORT ROUTER
+// ===============================
 module.exports = router

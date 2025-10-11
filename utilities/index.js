@@ -10,7 +10,7 @@ Util.getNav = async function (req, res, next) {
     let data = await invModel.getClassifications()
     let list = "<ul>"
     list += '<li><a href="/" title="Home page">Home</a></li>'
-    data.rows.forEach((row) => {
+    data.forEach((row) => {
         list += "<li>"
         list +=
             '<a href="/inv/type/' +
@@ -101,5 +101,61 @@ Util.checkJWTToken = (req, res, next) => {
         next()
     }
 }
+/* ****************************************
+*  Check Login
+**************************************/
+Util.checkLogin = (req, res, next) => {
+    if (res.locals.account) {
+        next()
+    } else {
+        req.flash("notice", "Please log in.")
+        return res.redirect("/account/login")
+    } 
+}
+
+/***
+ * List of vehicles
+ */
+Util.buildClassificationList = async () => {
+    try{
+        const classifications = await invModel.getClassifications();
+        let list = '<option value="">Select a Classification</option>';
+    classifications.forEach((c) => {
+        list += `<option value="${c.classification_id}">${c.classification_name}</option>`;
+    });
+
+    return list;
+    } catch (error) {
+    console.error("buildClassificationList error: " + error);
+    return '<option value="">No classifications available</option>';
+    }
+}   
+
+
+Util.checkAdminOrEmployee = (req, res, next) => {
+    console.log("Verifying JWT...");
+    if (req.cookies.jwt) {
+        jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
+            if (err) {
+                req.flash("notice", "Please log in");
+                res.clearCookie("jwt");
+                return res.redirect("/account/login");
+            }
+            console.log("Verified:", accountData);
+            if (accountData.account_type === "Employee" || accountData.account_type === "Admin") {
+                res.locals.accountData = accountData;
+                res.locals.loggedin = 1;
+                return next();
+            } else {
+                req.flash("notice", "You do not have permission to access that page");
+                return res.redirect("/account/login");
+            }
+        });
+    } else {
+        req.flash("notice", "Please log in");
+        return res.redirect("/account/login");
+    }
+};
+
 
 module.exports = Util

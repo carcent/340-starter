@@ -122,4 +122,77 @@ validate.checkLoginData = async (req, res, next) => {
   }
   next()
 }
+// Update Account rules (just return array of rules)
+validate.updateAccountRules = () => [
+  body("account_firstname")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("First name is required."),
+  body("account_lastname")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Last name is required."),
+  body("account_email")
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Valid email is required.")
+    .custom(async (account_email, { req }) => {
+      const exists = await accountModel.checkExistingEmail(account_email);
+      if (exists && exists.account_id != req.body.account_id) {
+        throw new Error("Email already exists.");
+      }
+    }),
+];
+
+// Middleware to check validation result
+validate.checkUpdateData = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const nav = await utilities.getNav();
+    return res.render("account/update", {
+      title: "Update Account",
+      nav,
+      account: req.body,
+      errors: errors.array(),
+      message: req.flash("notice"),
+    });
+  }
+  next();
+};
+
+validate.updatePasswordRules = () => [
+  body("account_password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password cannot be empty.")
+    .isStrongPassword({
+      minLength: 12,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    })
+    .withMessage(
+      "Password does not meet requirements (min 12 chars, uppercase, lowercase, number, symbol)."
+    ),
+];
+
+// Middleware to check validation result
+validate.checkPasswordData = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const nav = await utilities.getNav();
+    return res.render("account/update", {
+      title: "Update Account",
+      nav,
+      account: req.body,
+      errors: errors.array(),
+      message: req.flash("notice"),
+    });
+  }
+  next();
+};
 module.exports = validate

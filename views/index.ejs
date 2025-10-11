@@ -1,6 +1,16 @@
 
 <h1>Welcome to CSE Motors!</h1>
-    <%- messages() %>
+    <% if (messages && messages.error) { %>
+    <% messages.error.forEach(function(msg){ %>
+        <div class="error-message"><%= msg %></div>
+    <% }) %>
+<% } %>
+
+<% if (messages && messages.success) { %>
+    <% messages.success.forEach(function(msg){ %>
+        <div class="success-message"><%= msg %></div>
+    <% }) %>
+<% } %>
 <div class="container">
 <section id="img-main">
     <picture>

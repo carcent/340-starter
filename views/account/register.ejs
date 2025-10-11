@@ -2,12 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('../partials/head') %>
-<% if (errors) { %>
-    <ul class="notice">
-    <% errors.array().forEach(error => { %>
-    <li><%= error.msg %></li>
-<%  }) %>
-    </ul>
+    <% if (messages && messages.error) { %>
+    <% messages.notice.forEach(msg => { %>
+        <p class="flash-notice"><%= msg %></p>
+    <% }) %>
+    <% } %>
+
+<% if (messages && messages.success) { %>
+    <% messages.success.forEach(msg => { %>
+    <p class="flash-success"><%= msg %></p>
+    <% }) %>
 <% } %>
     <body>
 <div class="form-container">
