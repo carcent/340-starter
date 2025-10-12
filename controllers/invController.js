@@ -150,6 +150,62 @@ invCont.addClassification = async function (req, res, next) {
   }
 };
 
+/* ***********************
+ * Process Add Inventory
+ ************************ */
+invCont.addInventory = async function (req, res, next) {
+  try {
+    const {
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price,
+      classification_id
+    } = req.body
+
+    // Validación básica
+    if (!inv_make || !inv_model || !inv_year || !inv_price || !classification_id) {
+      req.flash("notice", "All fields are required.")
+      const nav = await utilities.getNav()
+      const classifications = await invModel.getClassifications()
+      return res.status(400).render("inventory/add-inventory", {
+        title: "Add New Vehicle",
+        nav,
+        classifications,
+        message: req.flash("notice"),
+        errors: null
+      })
+    }
+
+  
+    const addResult = await invModel.addInventory(
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_price,
+      classification_id
+    )
+
+    if (addResult) {
+      req.flash("notice", `The ${inv_make} ${inv_model} was successfully added.`)
+      res.redirect("/inv") 
+    } else {
+      req.flash("notice", "Sorry, the insert failed.")
+      const nav = await utilities.getNav()
+      const classifications = await invModel.getClassifications()
+      res.render("inventory/add-inventory", {
+        title: "Add New Vehicle",
+        nav,
+        classifications,
+        message: req.flash("notice"),
+        errors: null
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
 /* ******************************
  * Return inventory by classification as JSON (for AJAX)
  ****************************** */
