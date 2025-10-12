@@ -32,6 +32,8 @@ router.get(
     "/getInventory/:classification_id", 
     utilities.checkAdminOrEmployee, asyncHandler(invController.getInventoryJSON)
 )
+
+router.get("/search", asyncHandler(invController.searchInventory));
 //Delete
 router.get(
   "/delete"

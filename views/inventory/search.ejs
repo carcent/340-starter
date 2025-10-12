@@ -1,0 +1,25 @@
+<main>
+    <h1>Search Inventory</h1>
+
+    <!-- Flash message -->
+    <% if (message && message.length > 0) { %>
+        <div class="notice">
+        <% message.forEach(msg => { %>
+            <p><%= msg %></p>
+        <% }) %>
+        </div>
+    <% } %>
+
+    <!-- Search Form -->
+    <form id="inventorySearchForm" action="/inv/search" method="get">
+        <input type="text" name="q" placeholder="Search vehicles..." value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Inventory Results -->
+    <% if (grid && grid.length > 0) { %>
+        <%- grid %>
+    <% } else { %>
+        <p>No results found.</p>
+    <% } %>
+</main>

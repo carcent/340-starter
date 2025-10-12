@@ -224,6 +224,31 @@ invCont.getInventoryJSON = async function (req, res, next) {
   }
 };
 
-invCont
+invCont.searchInventory = async function(req, res, next) {
+    try {
+        const nav = await utilities.getNav();
+        const query = req.query.search; // coincide con name="search" del form
+
+        if (!query) {
+            req.flash("notice", "Please enter a search term.");
+            return res.redirect("/inv");
+        }
+
+        const results = await invModel.searchInventory(query);
+
+        const grid = await utilities.buildClassificationGrid(results);
+
+        res.render("inventory/management", {
+            title: "Search Results",
+            nav,
+            classificationSelect: await utilities.buildClassificationList(),
+            grid,
+            message: req.flash("notice"),
+            errors: null
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 module.exports = invCont;

@@ -9,7 +9,11 @@
         <% }) %>
       </div>
     <% } %>
-
+<!-- Search Form -->
+  <form id="inventorySearchForm" action="/inv/search" method="get">
+      <input type="text" name="search" placeholder="Search vehicles..." required>
+      <button type="submit">Search</button>
+  </form>
     <ul>
         <li><a href="inv/add-classification">Add New Classification</a></li>
         <li><a href="inv/add-inventory">Add New Vehicle</a></li>
@@ -19,6 +23,8 @@
     <%- classificationSelect %>
     
     <table id="inventoryDisplay"></table>
+
+
     <noscript>JavaScript must be enabled to use this page.</noscript>
     <script src="../../js/inventory"></script>
 </main>

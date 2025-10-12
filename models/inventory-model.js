@@ -88,10 +88,23 @@ async function addInventory(data) {
   }
 }
 
+// final activity
+async function searchInventory(query) {
+    const sql = `
+        SELECT * FROM inventory
+        WHERE inv_make ILIKE $1 OR inv_model ILIKE $1
+        ORDER BY inv_make, inv_model
+    `;
+    const values = [`%${query}%`];
+    const result = await pool.query(sql, values);
+    return result.rows;
+}
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getVehicleByInvId,
   addClassification,
   addInventory,
-};
+  searchInventory,
+};  
