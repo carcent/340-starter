@@ -42,6 +42,12 @@ app.use((req, res, next) => {
   res.locals.messages = req.flash()
   next()
 })
+
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session.loggedin || false;
+  res.locals.accountData = req.session.accountData || null;
+  next();
+});
 //body and cookie parsing
 
 app.use(bodyParser.json())
@@ -87,6 +93,7 @@ app.use("/inv", inventoryRoute)
 app.use('/account', accountRouter)
 // Index Route
 app.get("/", baseController.buildHome)
+
 
 
 // File Not Found Route -

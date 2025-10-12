@@ -103,6 +103,11 @@ async function accountLogin(req, res) {
       // Set the JWT cookie
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000, secure: process.env.NODE_ENV === "production" });
 
+      req.session.loggedin = true;
+      req.session.accountData = accountData;
+      res.locals.loggedin = true;
+      res.locals.accountData = accountData;
+      
       return res.redirect("/account/management");
     } else {
       req.flash("notice", "Invalid credentials. Please try again.");
@@ -121,6 +126,11 @@ async function accountLogin(req, res) {
 async function buildAccountManagement(req, res) {
   let nav = await utilities.getNav();
   const account = res.locals.account;
+  let classificationSelect = null;
+
+  if (account && (account.account_type === "Employee" || account.account_type === "Admin")) {
+    classificationSelect = await utilities.buildClassificationList(); 
+  }
 
   res.render("account/management", {
     title: "Account Management",
@@ -128,6 +138,7 @@ async function buildAccountManagement(req, res) {
     errors: null,
     message: req.flash("notice"),
     account,
+    classificationSelect,
   });
 }
 
@@ -213,6 +224,23 @@ async function updatePassword(req, res) {
   }
 }
 
+//log out
+async function logout(req, res, next) {
+  try {
+    await new Promise((resolve, reject) => {
+      req.session.destroy(err => {
+        if (err) reject(err)
+        else resolve()
+      })
+    })
+    res.clearCookie("session_id");
+    res.clearCookie("jwt");
+    res.redirect("/")
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   registerAccount,
   buildLogin,
@@ -222,5 +250,6 @@ module.exports = {
   buildAccountManagement,
   buildUpdateAccount,
   updateAccount, 
-  updatePassword
+  updatePassword,
+  logout
 };

@@ -133,29 +133,32 @@ Util.buildClassificationList = async () => {
 
 
 Util.checkAdminOrEmployee = (req, res, next) => {
-    console.log("Verifying JWT...");
-    if (req.cookies.jwt) {
-        jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
-            if (err) {
-                req.flash("notice", "Please log in");
-                res.clearCookie("jwt");
-                return res.redirect("/account/login");
-            }
-            console.log("Verified:", accountData);
-            if (accountData.account_type === "Employee" || accountData.account_type === "Admin") {
-                res.locals.accountData = accountData;
-                res.locals.loggedin = 1;
-                return next();
-            } else {
-                req.flash("notice", "You do not have permission to access that page");
-                return res.redirect("/account/login");
-            }
-        });
-    } else {
-        req.flash("notice", "Please log in");
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        req.flash("notice", "You must be logged in to access this page.");
         return res.redirect("/account/login");
     }
-};
+
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    // Check if account_type exists and is Employee or Admin
+    if (decoded.account_type === "Employee" || decoded.account_type === "Admin") {
+      // Pass decoded token to next middleware / controller if needed
+        req.account = decoded;
+        return next();
+    } else {
+        req.flash("notice", "You do not have permission to access this page.");
+        return res.redirect("/account/login");
+    }
+    } catch (err) {
+    console.error("JWT error:", err);
+    req.flash("notice", "Invalid or expired session. Please log in.");
+    return res.redirect("/account/login");
+    }
+}
+
 
 
 module.exports = Util

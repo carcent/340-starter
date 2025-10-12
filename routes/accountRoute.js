@@ -78,6 +78,7 @@ router.post(
   asyncHandler(accountController.updatePassword)
 );
 
+router.get("/logout", accountController.logout)
 // ===============================
 //         EXPORT ROUTER
 // ===============================
