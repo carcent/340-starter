@@ -1,19 +1,17 @@
 
-<!DOCTYPE html>
-<html lang="en">
-    <%- include('../partials/head') %>
-    <% if (messages && messages.error) { %>
-    <% messages.notice.forEach(msg => { %>
-        <p class="flash-notice"><%= msg %></p>
-    <% }) %>
-    <% } %>
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else { res.redirect('/') } %>
 
-<% if (messages && messages.success) { %>
-    <% messages.success.forEach(msg => { %>
-    <p class="flash-success"><%= msg %></p>
-    <% }) %>
+<%- messages() %>
+
+<% if (errors) { %>
+<ul class="message warning">
+    <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+    <%  }) %>
+</ul>
 <% } %>
-    <body>
 <div class="form-container">
 <h1><%= title %></h1>
 
@@ -38,4 +36,5 @@
 
 </form>
 </div>
-</body>
+
+<script src="/js/script.js"></script>

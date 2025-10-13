@@ -25,13 +25,10 @@ router.get("/login", asyncHandler(accountController.buildLogin))
 // Show registration form
 router.get("/register", asyncHandler(accountController.buildRegister))
 
-router.get("/", (req, res) => {
-  res.redirect("/account/login")
-})
 
 // Show account management page (only if logged in)
 router.get(
-  "/management",
+  "/",
   utilities.checkLogin,
   asyncHandler(accountController.buildAccountManagement)
 )
@@ -65,14 +62,16 @@ router.post(
 
 
 router.post(
-  "/update/:id",
+  "/update/",
+  utilities.checkLogin,
   regValidate.updateAccountRules(),
   regValidate.checkUpdateData,      
   asyncHandler(accountController.updateAccount) 
 );
 
 router.post(
-  "/update-password/:id",
+  "/update-password/",
+  utilities.checkLogin,
   regValidate.updatePasswordRules(),
   regValidate.checkPasswordData,
   asyncHandler(accountController.updatePassword)

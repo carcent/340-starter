@@ -27,21 +27,25 @@ const jwt = require("jsonwebtoken")
 * Middleware
 * ****************** */ 
 app.use(session({
-  store: new (require('connect-pg-simple')(session))({
-    createTableIfMissing: true,
-    pool,
-  }),
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  name: 'sessionId',
-}))
-app.use(flash())
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  })
+)
+app.use(require("connect-flash")())
 
-app.use((req, res, next) => {
-  res.locals.messages = req.flash()
+app.use(function (req, res, next) {
+  res.locals.messages = require("express-messages")(req, res)
   next()
 })
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
   res.locals.loggedin = req.session.loggedin || false;
@@ -50,8 +54,7 @@ app.use((req, res, next) => {
 });
 //body and cookie parsing
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 
 app.use(cookieParser())
 

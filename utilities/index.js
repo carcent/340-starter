@@ -132,32 +132,22 @@ Util.buildClassificationList = async () => {
 }   
 
 
-Util.checkAdminOrEmployee = (req, res, next) => {
-    const token = req.cookies.jwt;
-
-    if (!token) {
-        req.flash("notice", "You must be logged in to access this page.");
-        return res.redirect("/account/login");
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-    // Check if account_type exists and is Employee or Admin
-    if (decoded.account_type === "Employee" || decoded.account_type === "Admin") {
-      // Pass decoded token to next middleware / controller if needed
-        req.account = decoded;
-        return next();
-    } else {
-        req.flash("notice", "You do not have permission to access this page.");
-        return res.redirect("/account/login");
-    }
-    } catch (err) {
-    console.error("JWT error:", err);
-    req.flash("notice", "Invalid or expired session. Please log in.");
-    return res.redirect("/account/login");
+Util.checkAccountType = (req, res, next) => {
+    if(!res.locals.accountData)
+    {
+        return res.redirect("/account/login")
+        }
+    if (res.locals.accountData.account_type == "Employee" ||
+        res.locals.accountData.account_type == "Admin") 
+    {
+        next()
+    } 
+    else 
+    {
+        return res.redirect("/account/login")
     }
 }
+
 
 
 

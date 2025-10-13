@@ -1,7 +1,12 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+    res.redirect('/')
+} %>
 
-<main>
-    <h1><%= title %></h1>
-    <%- grid %>
-</main>
+<% if(Object.entries(htmlData).length > 0){ %>
 
-
+<%- htmlData %>
+<% } else { %>
+<p class="notice">Sorry, Vehicle was not found.</p>
+<% } %>
