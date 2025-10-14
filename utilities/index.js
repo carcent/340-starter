@@ -116,14 +116,21 @@ Util.checkLogin = (req, res, next) => {
 /***
  * List of vehicles
  */
-Util.buildClassificationList = async () => {
+Util.buildClassificationList = async (selectedId= null) => {
     try{
         const classifications = await invModel.getClassifications();
         let list = '<option value="">Select a Classification</option>';
     classifications.forEach((c) => {
         list += `<option value="${c.classification_id}">${c.classification_name}</option>`;
+    
+        if (selectedId && c.classification_id == selectedId) {
+        list += " selected";
+    }
+
+        list += `>${c.classification_name}</option>`;
     });
 
+    list += "</select>";
     return list;
     } catch (error) {
     console.error("buildClassificationList error: " + error);

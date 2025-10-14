@@ -1,22 +1,8 @@
-<% if (title) {%>
-<h1>
-  <%= title %>
-</h1>
-<%} else {res.redirect('/')} %>
 
-<%- messages() %>
-
-<% if (errors) { %>
-<ul class="message warning">
-  <% errors.array().forEach(error => { %>
-  <li><%= error.msg %></li>
-  <%  }) %>
-</ul>
-<% } %>
   <h1>Add New Vehicle</h1>
 
 
-  <form action="/inv/addInventory" method="post">
+  <form action="/inv/add-inventory" method="post">
     <fieldset>
       <label for="classificationList">Classification</label>
       <%- classificationSelect %>

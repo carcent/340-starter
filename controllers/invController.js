@@ -95,7 +95,7 @@ invCont.buildAddClassification = async function (req, res, next) {
       title: "Add New Classification",
       nav,
       message: req.flash("notice"),
-      erros:null,
+      errors:null,
     });
   } catch (error) {
     next(error);
@@ -108,12 +108,12 @@ invCont.buildAddClassification = async function (req, res, next) {
 invCont.buildAddInventory = async function (req, res, next) {
   try {
     const nav = await utilities.getNav();
-    const classifications = await invModel.getClassifications();
+    const classificationSelect = await invModel.getClassifications();
 
-    res.render("inventory/add-inventory", {
+    res.render("./inventory/add-inventory", {
       title: "Add New Vehicle",
       nav,
-      classifications,
+      classificationSelect,
       errors: null,
       message: req.flash("notice"),
     });
